@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { UploadCloud, FileVideo, Zap, Play, X, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import LimitModal from "@/components/LimitModal";
+import { gaEvent } from "@/lib/ga";
 
 export default function Home() {
 	const [file, setFile] = useState<File | null>(null);
@@ -58,7 +59,12 @@ export default function Home() {
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.files && e.target.files.length > 0) {
-			setFile(e.target.files[0]);
+			const selectedFile = e.target.files[0];
+			setFile(selectedFile);
+			gaEvent("file_selected", {
+				file_name: selectedFile.name,
+				file_size: selectedFile.size
+			});
 		}
 	};
 
@@ -76,12 +82,14 @@ export default function Home() {
 		// Check limit (3 per day)
 		if (usageCount >= 3 && !adUnlocked) {
 			setShowLimitModal(true);
+			gaEvent("limit_reached", { usage_count: usageCount });
 			return;
 		}
 
 		setIsProcessing(true);
 		setLogs([]);
 		addLog("Uploading to server...");
+		gaEvent("process_start", { speed: speed });
 
 		try {
 			const formData = new FormData();
@@ -124,6 +132,7 @@ export default function Home() {
 			window.URL.revokeObjectURL(url);
 			a.remove();
 			addLog("Successfully downloaded!");
+			gaEvent("process_success", { speed: speed, ad_unlocked: adUnlocked });
 
 			// Update usage count
 			const today = new Date().toLocaleDateString();

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { X, Zap, Play } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { gaEvent } from '@/lib/ga';
 
 interface LimitModalProps {
 	isOpen: boolean;
@@ -18,6 +19,7 @@ export default function LimitModal({ isOpen, onClose, onAdWatched }: LimitModalP
 	const startWatchingAd = () => {
 		setAdWatching(true);
 		setAdCountdown(10);
+		gaEvent("ad_watch_start", { type: "rewarded_simulation" });
 		// Simulate showing an ad — in prod, trigger AdSense interstitial or reward unit here
 		// For now, we show a countdown and then unlock
 		const interval = setInterval(() => {
@@ -26,6 +28,7 @@ export default function LimitModal({ isOpen, onClose, onAdWatched }: LimitModalP
 					clearInterval(interval);
 					setAdWatching(false);
 					setAdDone(true);
+					gaEvent("ad_watch_complete", {});
 					return 0;
 				}
 				return prev - 1;
@@ -114,6 +117,7 @@ export default function LimitModal({ isOpen, onClose, onAdWatched }: LimitModalP
 									{/* Option 1: Pro */}
 									<a
 										href="mailto:hello@fastvid.online?subject=Pro Plan&body=I want to subscribe to Fastvid Pro!"
+										onClick={() => gaEvent("pro_click", { location: "limit_modal" })}
 										className="flex items-center gap-4 p-4 rounded-2xl bg-indigo-600/20 border border-indigo-500/40 hover:border-indigo-500 hover:bg-indigo-600/30 transition-all cursor-pointer"
 									>
 										<div className="p-2 bg-indigo-500/20 rounded-xl">
