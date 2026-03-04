@@ -9,7 +9,7 @@ export default function GoogleAnalytics({
 }) {
   if (!GA_MEASUREMENT_ID) {
     console.warn(
-      "⚠️  GoogleAnalytics: GA_MEASUREMENT_ID is empty. Skipping gtag initialization."
+      "⚠️  GoogleAnalytics: GA_MEASUREMENT_ID is empty. Skipping gtag initialization.",
     );
     return null;
   }
