@@ -12,7 +12,26 @@ export default function Home() {
 	const [isProcessing, setIsProcessing] = useState(false);
 	const [showLimitModal, setShowLimitModal] = useState(false);
 	const [adUnlocked, setAdUnlocked] = useState(false);
+	const [usageCount, setUsageCount] = useState(0);
 	const fileInputRef = useRef<HTMLInputElement>(null);
+
+	// Load usage from localStorage on mount
+	useEffect(() => {
+		const today = new Date().toLocaleDateString();
+		const storedData = localStorage.getItem('fastvid_usage');
+		if (storedData) {
+			const { date, count } = JSON.parse(storedData);
+			if (date === today) {
+				setUsageCount(count);
+			} else {
+				// Reset for new day
+				localStorage.setItem('fastvid_usage', JSON.stringify({ date: today, count: 0 }));
+				setUsageCount(0);
+			}
+		} else {
+			localStorage.setItem('fastvid_usage', JSON.stringify({ date: today, count: 0 }));
+		}
+	}, []);
 
 	const handleDragOver = (e: React.DragEvent) => {
 		e.preventDefault();
@@ -53,6 +72,13 @@ export default function Home() {
 
 	const processVideo = async () => {
 		if (!file) return;
+
+		// Check limit (3 per day)
+		if (usageCount >= 3 && !adUnlocked) {
+			setShowLimitModal(true);
+			return;
+		}
+
 		setIsProcessing(true);
 		setLogs([]);
 		addLog("Uploading to server...");
@@ -98,6 +124,16 @@ export default function Home() {
 			window.URL.revokeObjectURL(url);
 			a.remove();
 			addLog("Successfully downloaded!");
+
+			// Update usage count
+			const today = new Date().toLocaleDateString();
+			const newCount = usageCount + 1;
+			setUsageCount(newCount);
+			localStorage.setItem('fastvid_usage', JSON.stringify({ date: today, count: newCount }));
+
+			if (adUnlocked) {
+				setAdUnlocked(false);
+			}
 		} catch (error: any) {
 			console.error("Processing error:", error);
 			alert(error.message || "FFmpeg execution error. Please check FFmpeg installation.");

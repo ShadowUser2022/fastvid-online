@@ -104,9 +104,9 @@ export default function LimitModal({ isOpen, onClose, onAdWatched }: LimitModalP
 							<>
 								<div className="flex flex-col items-center text-center mb-8">
 									<div className="text-4xl mb-4">⏱️</div>
-									<h2 className="text-2xl font-extrabold text-zinc-100 mb-2">Free limit reached</h2>
+									<h2 className="text-2xl font-extrabold text-zinc-100 mb-2">Daily limit reached</h2>
 									<p className="text-zinc-400 text-sm">
-										Videos up to 10 minutes are free. To process longer videos — upgrade to Pro or watch a short ad.
+										You&apos;ve used your 3 free daily videos. To process more — upgrade to Pro or watch a short ad to unlock one more!
 									</p>
 								</div>
 

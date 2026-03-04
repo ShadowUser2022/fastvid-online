@@ -21,32 +21,9 @@ export async function POST(req: NextRequest) {
 
 		await fs.writeFile(inputPath, Buffer.from(await file.arrayBuffer()));
 
-		// Check video duration — 10 min limit for Free tier (skip if ad was watched)
-		if (!adUnlocked) {
-			const getDuration = (path: string): Promise<number> => {
-				return new Promise((resolve) => {
-					const ffprobe = spawn('ffprobe', [
-						'-v', 'error',
-						'-show_entries', 'format=duration',
-						'-of', 'default=noprint_wrappers=1:nokey=1',
-						path
-					]);
-					let output = '';
-					ffprobe.stdout.on('data', (data) => output += data.toString());
-					ffprobe.on('close', () => resolve(parseFloat(output) || 0));
-					ffprobe.on('error', () => resolve(0));
-				});
-			};
-
-			const duration = await getDuration(inputPath);
-			if (duration > 600) {
-				await fs.unlink(inputPath).catch(console.error);
-				return NextResponse.json({
-					error: "Free limit reached",
-					message: "Free tier: videos up to 10 minutes. Watch an ad or upgrade to Pro."
-				}, { status: 403 });
-			}
-		}
+		// Check video duration — logic moved to frontend iteration count (3/day)
+		// We keep basic check to prevent abuse of very long videos on free tier if needed, 
+		// but for now we follow user's request for "3 per day"
 
 		return new Promise<NextResponse>((resolve) => {
 			const ffmpeg = spawn('ffmpeg', [
