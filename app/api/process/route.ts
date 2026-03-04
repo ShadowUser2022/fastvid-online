@@ -49,11 +49,14 @@ export async function POST(req: NextRequest) {
 		return new Promise<NextResponse>((resolve) => {
 			const ffmpeg = spawn('ffmpeg', [
 				'-i', inputPath,
-				'-filter:v', `setpts=PTS/${speed}`,
-				'-filter:a', `atempo=${speed}`,
+				'-filter_complex', `[0:v]setpts=PTS/${speed},fps=30[v];[0:a]atempo=${speed}[a]`,
+				'-map', '[v]',
+				'-map', '[a]',
 				'-c:v', 'libx264',
-				'-preset', 'fast',
-				'-crf', '23',
+				'-preset', 'ultrafast',    // Найшвидший пресет - менше CPU/RAM
+				'-crf', '28',              // Трохи нижча якість = менше RAM
+				'-threads', '2',           // Обмеження потоків для Railway free tier
+				'-movflags', '+faststart',
 				outputPath
 			]);
 
