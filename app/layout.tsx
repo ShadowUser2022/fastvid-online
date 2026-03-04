@@ -15,12 +15,18 @@ export const metadata: Metadata = {
 		"speed up lectures",
 		"online video tool",
 		"fast video processing",
+		"speed up video without changing pitch",
+		"video speed changer natural voice",
+		"accelerate video lectures online",
+		"online video speed controller",
+		"watch videos faster without high pitch",
+		"fast video processing tool"
 	],
 	authors: [{ name: "Fastvid Team" }],
 	openGraph: {
-		title: "Fastvid - Online Video Speed Changer",
+		title: "Fastvid - Speed Up Video Without Pitch Distortion",
 		description:
-			"Save hours of time by speeding up your videos without losing audio quality.",
+			"Save hours of time by speeding up your videos 1.5x or 2.0x while preserving natural audio quality.",
 		url: "https://www.fastvid.online",
 		siteName: "Fastvid",
 		locale: "en_US",

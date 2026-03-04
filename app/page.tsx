@@ -357,6 +357,52 @@ export default function Home() {
 				</div>
 			</section>
 
+			{/* WHY CHOOSE US & FAQ SECTION */}
+			<section className="z-10 w-full max-w-4xl mt-20 mb-20 px-4">
+				<div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+					{/* Why FastVid */}
+					<div>
+						<h2 className="text-2xl font-bold text-zinc-100 mb-6 flex items-center gap-2">
+							<Zap className="w-5 h-5 text-indigo-400" />
+							Why FastVid.online?
+						</h2>
+						<ul className="space-y-4 text-zinc-400">
+							<li className="flex gap-3">
+								<span className="text-indigo-500 font-bold">✓</span>
+								<p><strong className="text-zinc-200">No &quot;Chipmunk&quot; Effect:</strong> Our advanced algorithms maintain your natural voice pitch even at 2x speed.</p>
+							</li>
+							<li className="flex gap-3">
+								<span className="text-indigo-500 font-bold">✓</span>
+								<p><strong className="text-zinc-200">Privacy First:</strong> Your videos are processed securely and deleted automatically after processing.</p>
+							</li>
+							<li className="flex gap-3">
+								<span className="text-indigo-500 font-bold">✓</span>
+								<p><strong className="text-zinc-200">Optimized for Education:</strong> Perfect for students watching long Zoom lectures or online courses.</p>
+							</li>
+						</ul>
+					</div>
+
+					{/* FAQ */}
+					<div>
+						<h2 className="text-2xl font-bold text-zinc-100 mb-6">Frequently Asked Questions</h2>
+						<div className="space-y-6">
+							<div>
+								<h3 className="text-zinc-200 font-semibold mb-2">How to speed up video without changing pitch?</h3>
+								<p className="text-sm text-zinc-500 leading-relaxed">Simply upload your MP4 or MOV file to FastVid. Our tool uses professional audio filters (atempo) to ensure the voice remains natural while the video plays faster.</p>
+							</div>
+							<div>
+								<h3 className="text-zinc-200 font-semibold mb-2">Is it possible to accelerate YouTube lectures?</h3>
+								<p className="text-sm text-zinc-500 leading-relaxed">Yes! If you download the lecture video, you can process it here to get much better audio quality at high speeds (1.5x, 2.0x) compared to standard players.</p>
+							</div>
+							<div>
+								<h3 className="text-zinc-200 font-semibold mb-2">Is FastVid free to use?</h3>
+								<p className="text-sm text-zinc-500 leading-relaxed">We offer 3 high-quality video processes per day for free. For unlimited access and larger files, check out our Pro Plan.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
 			{/* PRO PLAN */}
 			<section className="z-10 w-full max-w-4xl mb-24">
 				<div className="relative overflow-hidden rounded-3xl border border-indigo-500/30 bg-gradient-to-br from-indigo-900/40 to-zinc-900/60 p-8 sm:p-12">
