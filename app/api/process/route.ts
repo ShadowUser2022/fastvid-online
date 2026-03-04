@@ -21,6 +21,31 @@ export async function POST(req: NextRequest) {
 		// Записуємо отриманий файл у тимчасову директорію
 		await fs.writeFile(inputPath, Buffer.from(await file.arrayBuffer()));
 
+		// Перевірка тривалості відео (ліміт 600 секунд = 10 хв для Free)
+		const getDuration = (path: string): Promise<number> => {
+			return new Promise((resolve) => {
+				const ffprobe = spawn('ffprobe', [
+					'-v', 'error',
+					'-show_entries', 'format=duration',
+					'-of', 'default=noprint_wrappers=1:nokey=1',
+					path
+				]);
+				let output = '';
+				ffprobe.stdout.on('data', (data) => output += data.toString());
+				ffprobe.on('close', () => resolve(parseFloat(output) || 0));
+				ffprobe.on('error', () => resolve(0)); // Якщо ffprobe не знайдено, пропускаємо перевірку (або ставимо дефолт)
+			});
+		};
+
+		const duration = await getDuration(inputPath);
+		if (duration > 600) {
+			await fs.unlink(inputPath).catch(console.error);
+			return NextResponse.json({
+				error: "Професійна версія потрібна",
+				message: "Безкоштовний ліміт — 10 хвилин. Для довших відео, будь ласка, підпишіться на Pro."
+			}, { status: 403 });
+		}
+
 		return new Promise<NextResponse>((resolve) => {
 			const ffmpeg = spawn('ffmpeg', [
 				'-i', inputPath,
