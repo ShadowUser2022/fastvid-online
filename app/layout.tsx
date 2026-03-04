@@ -44,7 +44,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	// Hardcoded fallback ID from credentials.md to ensure it works even if ENV is missing during build
-	const GA_ID = process.env.NEXT_PUBLIC_GA_ID || "G-YEPD9R2P8T";
+	const GA_ID = process.env.NEXT_PUBLIC_GA_ID || "G-GH1LGKK06X";
 
 	// Debug: Show GA_ID status in console
 	if (!GA_ID) {
