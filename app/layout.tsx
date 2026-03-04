@@ -45,9 +45,23 @@ export default function RootLayout({
 }>) {
   const GA_ID = process.env.NEXT_PUBLIC_GA_ID || "";
 
+  // Debug: Show GA_ID status in console
+  if (!GA_ID) {
+    console.warn(
+      "⚠️  NEXT_PUBLIC_GA_ID is EMPTY — Google Analytics will be DISABLED. Check Railway variables."
+    );
+  } else {
+    console.log("✅ NEXT_PUBLIC_GA_ID loaded:", GA_ID);
+  }
+
   return (
     <html lang="en" className="dark">
       <head>
+        {/* Debug: GA ID status in meta tag for view-source visibility */}
+        <meta
+          name="ga-debug"
+          content={GA_ID ? `GA_ID=${GA_ID}` : "GA_ID=EMPTY"}
+        />
         <GoogleAnalytics GA_MEASUREMENT_ID={GA_ID} />
         {/* Google AdSense — raw script tag for Google crawler visibility */}
         {/* eslint-disable-next-line @next/next/no-sync-scripts */}

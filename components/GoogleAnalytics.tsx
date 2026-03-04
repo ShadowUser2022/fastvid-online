@@ -8,13 +8,13 @@ export default function GoogleAnalytics({
   GA_MEASUREMENT_ID: string;
 }) {
   if (!GA_MEASUREMENT_ID) {
-    if (process.env.NODE_ENV !== "production") {
-      console.warn(
-        "GoogleAnalytics component rendered without a measurement ID.",
-      );
-    }
+    console.warn(
+      "⚠️  GoogleAnalytics: GA_MEASUREMENT_ID is empty. Skipping gtag initialization."
+    );
     return null;
   }
+
+  console.log("✅ GoogleAnalytics: Initializing with ID:", GA_MEASUREMENT_ID);
 
   return (
     <>
