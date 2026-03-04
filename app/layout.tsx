@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 
@@ -41,12 +40,12 @@ export default function RootLayout({
 		<html lang="en" className="dark">
 			<head>
 				<GoogleAnalytics GA_MEASUREMENT_ID={GA_ID} />
-				{/* Google AdSense Auto Ads */}
-				<Script
+				{/* Google AdSense — raw script tag for Google crawler visibility */}
+				{/* eslint-disable-next-line @next/next/no-sync-scripts */}
+				<script
 					async
 					src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1705879673378260"
 					crossOrigin="anonymous"
-					strategy="afterInteractive"
 				/>
 			</head>
 			<body className={`${inter.variable} font-sans antialiased bg-zinc-950 text-zinc-50 min-h-screen selection:bg-indigo-500/30`}>
