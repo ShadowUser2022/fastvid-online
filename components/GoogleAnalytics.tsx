@@ -1,21 +1,32 @@
-'use client';
+"use client";
 
-import Script from 'next/script';
+import Script from "next/script";
 
-export default function GoogleAnalytics({ GA_MEASUREMENT_ID }: { GA_MEASUREMENT_ID: string }) {
-	if (!GA_MEASUREMENT_ID) return null;
+export default function GoogleAnalytics({
+  GA_MEASUREMENT_ID,
+}: {
+  GA_MEASUREMENT_ID: string;
+}) {
+  if (!GA_MEASUREMENT_ID) {
+    if (process.env.NODE_ENV !== "production") {
+      console.warn(
+        "GoogleAnalytics component rendered without a measurement ID.",
+      );
+    }
+    return null;
+  }
 
-	return (
-		<>
-			<Script
-				strategy="afterInteractive"
-				src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-			/>
-			<Script
-				id="google-analytics"
-				strategy="afterInteractive"
-				dangerouslySetInnerHTML={{
-					__html: `
+  return (
+    <>
+      <Script
+        strategy="afterInteractive"
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+      />
+      <Script
+        id="google-analytics"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
                 gtag('js', new Date());
@@ -24,8 +35,8 @@ export default function GoogleAnalytics({ GA_MEASUREMENT_ID }: { GA_MEASUREMENT_
                     page_path: window.location.pathname,
                 });
                 `,
-				}}
-			/>
-		</>
-	);
+        }}
+      />
+    </>
+  );
 }
