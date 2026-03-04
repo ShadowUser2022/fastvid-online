@@ -1,14 +1,17 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { UploadCloud, FileVideo, Zap, Play, X, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import LimitModal from "@/components/LimitModal";
 
 export default function Home() {
 	const [file, setFile] = useState<File | null>(null);
 	const [isHovering, setIsHovering] = useState(false);
 	const [speed, setSpeed] = useState(1.5);
 	const [isProcessing, setIsProcessing] = useState(false);
+	const [showLimitModal, setShowLimitModal] = useState(false);
+	const [adUnlocked, setAdUnlocked] = useState(false);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const handleDragOver = (e: React.DragEvent) => {
@@ -29,7 +32,7 @@ export default function Home() {
 			if (droppedFile.type.startsWith("video/")) {
 				setFile(droppedFile);
 			} else {
-				alert("Будь ласка, завантажте відео файл.");
+				alert("Please upload a video file.");
 			}
 		}
 	};
@@ -42,7 +45,6 @@ export default function Home() {
 
 	const [status, setStatus] = useState<string>("");
 	const [logs, setLogs] = useState<string[]>([]);
-	const BUILD_ID = "2026-03-04-13-10"; // Мітка для перевірки оновлення
 
 	const addLog = (msg: string) => {
 		setLogs(prev => [...prev.slice(-4), `${new Date().toLocaleTimeString()}: ${msg}`]);
@@ -59,11 +61,22 @@ export default function Home() {
 			const formData = new FormData();
 			formData.append("video", file);
 			formData.append("speed", speed.toString());
+			if (adUnlocked) {
+				formData.append("adUnlocked", "true");
+				setAdUnlocked(false); // use once
+			}
 
 			const response = await fetch("/api/process", {
 				method: "POST",
 				body: formData,
 			});
+
+			if (response.status === 403) {
+				// Free limit reached — show the monetization modal
+				setShowLimitModal(true);
+				setIsProcessing(false);
+				return;
+			}
 
 			if (!response.ok) {
 				const errorData = await response.json().catch(() => ({ error: "Server error" }));
@@ -95,6 +108,13 @@ export default function Home() {
 
 	return (
 		<main className="flex min-h-screen flex-col items-center justify-center p-6 sm:p-24 relative overflow-hidden">
+			{/* Limit Reached Modal */}
+			<LimitModal
+				isOpen={showLimitModal}
+				onClose={() => setShowLimitModal(false)}
+				onAdWatched={() => setAdUnlocked(true)}
+			/>
+
 			{/* Animated background graphic decorators */}
 			<div className="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-indigo-600/20 blur-[120px] pointer-events-none" />
 			<div className="absolute bottom-[-10%] right-[-10%] w-[40vw] h-[40vw] rounded-full bg-blue-600/20 blur-[120px] pointer-events-none" />
@@ -263,8 +283,19 @@ export default function Home() {
 				</AnimatePresence>
 			</motion.div>
 
+			{/* AdSense Banner — between uploader and How it Works */}
+			<div className="z-10 w-full max-w-4xl mt-12 mb-2">
+				<ins
+					className="adsbygoogle"
+					style={{ display: 'block' }}
+					data-ad-client="ca-pub-1705879673378260"
+					data-ad-format="auto"
+					data-full-width-responsive="true"
+				/>
+			</div>
+
 			{/* HOW IT WORKS */}
-			<section className="z-10 w-full max-w-4xl mt-24 mb-12">
+			<section className="z-10 w-full max-w-4xl mt-12 mb-12">
 				<h2 className="text-3xl font-bold text-center text-zinc-100 mb-3">How it works</h2>
 				<p className="text-center text-zinc-500 mb-12">Three simple steps. No account required.</p>
 				<div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
