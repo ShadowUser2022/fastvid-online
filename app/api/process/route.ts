@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { spawn } from 'child_process';
 import fs from 'fs/promises';
+import ffmpegPath from 'ffmpeg-static';
 
 export const maxDuration = 60; // Set Vercel/Railway max duration higher if possible
 
@@ -22,7 +23,12 @@ export async function POST(req: NextRequest) {
 		await fs.writeFile(inputPath, Buffer.from(await file.arrayBuffer()));
 
 		return new Promise<NextResponse>((resolve) => {
-			const ffmpeg = spawn('ffmpeg', [
+			if (!ffmpegPath) {
+				resolve(NextResponse.json({ error: "FFmpeg binary not found" }, { status: 500 }));
+				return;
+			}
+
+			const ffmpeg = spawn(ffmpegPath, [
 				'-i', inputPath,
 				'-filter:v', `setpts=PTS/${speed}`,
 				'-filter:a', `atempo=${speed}`,
