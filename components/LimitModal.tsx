@@ -11,6 +11,20 @@ interface LimitModalProps {
 	onAdWatched: () => void;
 }
 
+// Helper component to initialize AdSense after mount
+const AdInitializer = () => {
+	useEffect(() => {
+		try {
+			if (typeof window !== 'undefined') {
+				((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({});
+			}
+		} catch (e) {
+			console.error("AdSense push error:", e);
+		}
+	}, []);
+	return null;
+};
+
 export default function LimitModal({ isOpen, onClose, onAdWatched }: LimitModalProps) {
 	const [adWatching, setAdWatching] = useState(false);
 	const [adCountdown, setAdCountdown] = useState(10);
@@ -78,13 +92,11 @@ export default function LimitModal({ isOpen, onClose, onAdWatched }: LimitModalP
 								<div className="w-full min-h-[100px] bg-zinc-800/50 rounded-xl border border-dashed border-zinc-700 flex items-center justify-center relative overflow-hidden">
 									<ins
 										className="adsbygoogle"
-										style={{ display: 'inline-block', width: '100%', height: '90px' }}
+										style={{ display: 'block', width: '100%', height: '90px' }}
 										data-ad-client="ca-pub-1705879673378260"
 										data-ad-slot="9170807496"
 									/>
-									<script>
-										{`(adsbygoogle = window.adsbygoogle || []).push({});`}
-									</script>
+									<AdInitializer />
 								</div>
 							</div>
 						) : adDone ? (
