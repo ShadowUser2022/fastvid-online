@@ -72,15 +72,16 @@ export default function LimitModal({ isOpen, onClose, onAdWatched }: LimitModalP
 									<p className="text-zinc-500 text-sm">Your next video will unlock in {adCountdown}s</p>
 								</div>
 								{/* Ad block — Google AdSense slot for in-modal ad */}
-								<div className="w-full min-h-[100px] bg-zinc-800/50 rounded-xl border border-dashed border-zinc-700 flex items-center justify-center">
+								<div className="w-full min-h-[100px] bg-zinc-800/50 rounded-xl border border-dashed border-zinc-700 flex items-center justify-center relative overflow-hidden">
 									<ins
 										className="adsbygoogle"
-										style={{ display: 'block', minHeight: '100px', width: '100%' }}
+										style={{ display: 'inline-block', width: '100%', height: '90px' }}
 										data-ad-client="ca-pub-1705879673378260"
-										data-ad-format="auto"
-										data-full-width-responsive="true"
+										data-ad-slot="9170807496"
 									/>
-									<span className="text-zinc-600 text-xs absolute">Ad space</span>
+									<script>
+										{`(adsbygoogle = window.adsbygoogle || []).push({});`}
+									</script>
 								</div>
 							</div>
 						) : adDone ? (
