@@ -40,14 +40,23 @@ export default function Home() {
 		}
 	};
 
+	const [status, setStatus] = useState<string>("");
+
 	const processVideo = async () => {
 		if (!file) return;
 		setIsProcessing(true);
+		setStatus("Uploading...");
 
 		try {
 			const formData = new FormData();
 			formData.append("video", file);
 			formData.append("speed", speed.toString());
+
+			// Оскільки ми не маємо реального прогрес-бару для FFmpeg через Fetch, 
+			// ми змінюємо статуси вручну, щоб користувач розумів, що процес іде.
+			setTimeout(() => {
+				if (isProcessing) setStatus("Processing Video (FFmpeg)...");
+			}, 2000);
 
 			const response = await fetch("/api/process", {
 				method: "POST",
@@ -55,11 +64,11 @@ export default function Home() {
 			});
 
 			if (!response.ok) {
-				const errorText = await response.text();
-				throw new Error(errorText || "Невідома помилка сервера");
+				const errorData = await response.json().catch(() => ({ error: "Server error" }));
+				throw new Error(errorData.message || errorData.error || "Невідома помилка сервера");
 			}
 
-			// Отримуємо бінарний файл (Blob) і ініціюємо завантаження
+			setStatus("Finalizing & Downloading...");
 			const blob = await response.blob();
 			const url = window.URL.createObjectURL(blob);
 			const a = document.createElement("a");
@@ -69,11 +78,13 @@ export default function Home() {
 			a.click();
 			window.URL.revokeObjectURL(url);
 			a.remove();
-		} catch (error) {
+			setStatus("Success!");
+		} catch (error: any) {
 			console.error("Помилка обробки:", error);
-			alert("Виникла помилка під час обробки відео. Переконайтесь, що FFmpeg встановлено.");
+			alert(error.message || "Виникла помилка під час обробки відео. Переконайтесь, що FFmpeg встановлено.");
 		} finally {
 			setIsProcessing(false);
+			setTimeout(() => setStatus(""), 3000);
 		}
 	};
 
@@ -217,7 +228,7 @@ export default function Home() {
 								{isProcessing ? (
 									<>
 										<Loader2 className="w-5 h-5 animate-spin" />
-										<span>Processing...</span>
+										<span>{status || "Processing..."}</span>
 									</>
 								) : (
 									<>
