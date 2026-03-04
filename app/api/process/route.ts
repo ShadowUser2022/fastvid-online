@@ -57,10 +57,18 @@ export async function POST(req: NextRequest) {
 				outputPath
 			]);
 
+			let stderr = "";
+			ffmpeg.stderr.on('data', (data) => stderr += data.toString());
+
 			ffmpeg.on('close', async (code) => {
 				try {
 					if (code !== 0) {
-						resolve(NextResponse.json({ error: "FFmpeg process failed with code " + code }, { status: 500 }));
+						console.error("FFmpeg Error Out:", stderr);
+						resolve(NextResponse.json({
+							error: "FFmpeg process failed",
+							details: stderr,
+							code
+						}, { status: 500 }));
 						return;
 					}
 
@@ -83,8 +91,12 @@ export async function POST(req: NextRequest) {
 			});
 
 			ffmpeg.on("error", (err) => {
-				console.error("FFmpeg error:", err);
-				resolve(NextResponse.json({ error: "FFmpeg execution error" }, { status: 500 }));
+				console.error("FFmpeg spawn error:", err);
+				resolve(NextResponse.json({
+					error: "FFmpeg execution error",
+					message: err.message,
+					details: "Make sure FFmpeg is installed in the system PATH"
+				}, { status: 500 }));
 			});
 		});
 	} catch (error) {

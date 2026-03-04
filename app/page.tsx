@@ -41,22 +41,24 @@ export default function Home() {
 	};
 
 	const [status, setStatus] = useState<string>("");
+	const [logs, setLogs] = useState<string[]>([]);
+	const BUILD_ID = "2026-03-04-13-10"; // Мітка для перевірки оновлення
+
+	const addLog = (msg: string) => {
+		setLogs(prev => [...prev.slice(-4), `${new Date().toLocaleTimeString()}: ${msg}`]);
+		setStatus(msg);
+	};
 
 	const processVideo = async () => {
 		if (!file) return;
 		setIsProcessing(true);
-		setStatus("Uploading...");
+		setLogs([]);
+		addLog("Uploading to server...");
 
 		try {
 			const formData = new FormData();
 			formData.append("video", file);
 			formData.append("speed", speed.toString());
-
-			// Оскільки ми не маємо реального прогрес-бару для FFmpeg через Fetch, 
-			// ми змінюємо статуси вручну, щоб користувач розумів, що процес іде.
-			setTimeout(() => {
-				if (isProcessing) setStatus("Processing Video (FFmpeg)...");
-			}, 2000);
 
 			const response = await fetch("/api/process", {
 				method: "POST",
@@ -65,10 +67,14 @@ export default function Home() {
 
 			if (!response.ok) {
 				const errorData = await response.json().catch(() => ({ error: "Server error" }));
-				throw new Error(errorData.message || errorData.error || "Невідома помилка сервера");
+				const msg = errorData.message || errorData.error || "Unknown server error";
+				addLog(`Error: ${msg}`);
+				throw new Error(msg);
 			}
 
-			setStatus("Finalizing & Downloading...");
+			addLog("ffmpeg processing finished...");
+			addLog("Downloading result...");
+
 			const blob = await response.blob();
 			const url = window.URL.createObjectURL(blob);
 			const a = document.createElement("a");
@@ -78,13 +84,12 @@ export default function Home() {
 			a.click();
 			window.URL.revokeObjectURL(url);
 			a.remove();
-			setStatus("Success!");
+			addLog("Successfully downloaded!");
 		} catch (error: any) {
-			console.error("Помилка обробки:", error);
-			alert(error.message || "Виникла помилка під час обробки відео. Переконайтесь, що FFmpeg встановлено.");
+			console.error("Processing error:", error);
+			alert(error.message || "FFmpeg execution error. Please check FFmpeg installation.");
 		} finally {
 			setIsProcessing(false);
-			setTimeout(() => setStatus(""), 3000);
 		}
 	};
 
@@ -135,6 +140,7 @@ export default function Home() {
 			>
 				<AnimatePresence mode="wait">
 					{!file ? (
+						// ... existing code ...
 						<motion.div
 							key="upload"
 							initial={{ opacity: 0, height: 0 }}
@@ -237,10 +243,30 @@ export default function Home() {
 									</>
 								)}
 							</button>
+
+							{/* Real-time Status Logs for Debugging */}
+							{logs.length > 0 && (
+								<div className="mt-4 p-3 bg-black/40 rounded-lg border border-zinc-800 text-left">
+									<p className="text-[10px] uppercase tracking-wider text-zinc-500 mb-2 font-bold">System Status Trace</p>
+									<div className="space-y-1">
+										{logs.map((log, i) => (
+											<div key={i} className="text-xs font-mono text-zinc-400 flex gap-2">
+												<span className="text-indigo-500/60 leading-none">›</span>
+												{log}
+											</div>
+										))}
+									</div>
+								</div>
+							)}
 						</motion.div>
 					)}
 				</AnimatePresence>
 			</motion.div>
+
+			{/* Build Version Tag for Verification */}
+			<div className="mt-8 text-[10px] text-zinc-600 font-mono uppercase tracking-widest opacity-50">
+				Build: {BUILD_ID} • fastvid.online v1.0.4
+			</div>
 		</main>
 	);
 }
