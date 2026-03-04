@@ -3,40 +3,41 @@
 import Script from "next/script";
 
 export default function GoogleAnalytics({
-  GA_MEASUREMENT_ID,
+	GA_MEASUREMENT_ID,
 }: {
-  GA_MEASUREMENT_ID: string;
+	GA_MEASUREMENT_ID: string;
 }) {
-  if (!GA_MEASUREMENT_ID) {
-    console.warn(
-      "⚠️  GoogleAnalytics: GA_MEASUREMENT_ID is empty. Skipping gtag initialization.",
-    );
-    return null;
-  }
+	if (!GA_MEASUREMENT_ID) {
+		console.warn(
+			"⚠️  GoogleAnalytics: GA_MEASUREMENT_ID is empty. Skipping gtag initialization.",
+		);
+		return null;
+	}
 
-  console.log("✅ GoogleAnalytics: Initializing with ID:", GA_MEASUREMENT_ID);
+	console.log("✅ GoogleAnalytics: Initializing with ID:", GA_MEASUREMENT_ID);
 
-  return (
-    <>
-      <Script
-        strategy="afterInteractive"
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-      />
-      <Script
-        id="google-analytics"
-        strategy="afterInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
+	return (
+		<>
+			<Script
+				strategy="afterInteractive"
+				src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+			/>
+			<Script
+				id="google-analytics"
+				strategy="afterInteractive"
+				dangerouslySetInnerHTML={{
+					__html: `
                 window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
+                function gtag(){window.dataLayer.push(arguments);}
                 gtag('js', new Date());
 
                 gtag('config', '${GA_MEASUREMENT_ID}', {
                     page_path: window.location.pathname,
+                    send_page_view: true
                 });
                 `,
-        }}
-      />
-    </>
-  );
+				}}
+			/>
+		</>
+	);
 }
