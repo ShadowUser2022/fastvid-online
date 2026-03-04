@@ -1,2 +1,9 @@
 [phases.setup]
 nixPkgs = ["ffmpeg", "nodejs"]
+
+[phases.build]
+dependsOn = ["setup"]
+cmds = ["npm install", "npm run build"]
+
+[start]
+cmd = "npm run start"
