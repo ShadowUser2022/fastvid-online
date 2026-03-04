@@ -263,9 +263,69 @@ export default function Home() {
 				</AnimatePresence>
 			</motion.div>
 
-			{/* Build Version Tag for Verification */}
-			<div className="mt-8 text-[10px] text-zinc-600 font-mono uppercase tracking-widest opacity-50">
-				Build: {BUILD_ID} • fastvid.online v1.0.4
+			{/* HOW IT WORKS */}
+			<section className="z-10 w-full max-w-4xl mt-24 mb-12">
+				<h2 className="text-3xl font-bold text-center text-zinc-100 mb-3">How it works</h2>
+				<p className="text-center text-zinc-500 mb-12">Three simple steps. No account required.</p>
+				<div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+					{[
+						{ step: "01", title: "Upload your video", desc: "Drag & drop any MP4, MOV, or WebM file up to 500MB directly on the page." },
+						{ step: "02", title: "Choose your speed", desc: "Pick 1.25x, 1.5x, or 2x — or fine-tune with the slider. Audio pitch stays natural." },
+						{ step: "03", title: "Download instantly", desc: "Click Speed Up Video. Your browser downloads the ready file in seconds." },
+					].map(({ step, title, desc }) => (
+						<div key={step} className="flex flex-col gap-3 p-6 rounded-2xl bg-zinc-900/60 border border-zinc-800">
+							<span className="text-5xl font-black text-indigo-500/30 leading-none">{step}</span>
+							<h3 className="text-lg font-semibold text-zinc-100">{title}</h3>
+							<p className="text-sm text-zinc-500 leading-relaxed">{desc}</p>
+						</div>
+					))}
+				</div>
+			</section>
+
+			{/* PRO PLAN */}
+			<section className="z-10 w-full max-w-4xl mb-24">
+				<div className="relative overflow-hidden rounded-3xl border border-indigo-500/30 bg-gradient-to-br from-indigo-900/40 to-zinc-900/60 p-8 sm:p-12">
+					<div className="absolute top-0 right-0 w-64 h-64 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
+					<div className="flex flex-col sm:flex-row gap-8 items-start sm:items-center justify-between relative z-10">
+						<div className="flex flex-col gap-4">
+							<div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-sm font-medium w-fit">
+								<Zap className="w-3.5 h-3.5 fill-current" /> Pro Plan
+							</div>
+							<h2 className="text-3xl font-extrabold text-zinc-100">Unlock full power</h2>
+							<ul className="flex flex-col gap-2 text-sm text-zinc-400">
+								{[
+									"Videos up to 3 hours long",
+									"Priority server queue (faster processing)",
+									"Up to 4x speed with pitch correction",
+									"Batch processing (multiple files)",
+								].map(f => (
+									<li key={f} className="flex items-center gap-2">
+										<span className="w-1.5 h-1.5 rounded-full bg-indigo-400 shrink-0" />
+										{f}
+									</li>
+								))}
+							</ul>
+						</div>
+						<div className="flex flex-col items-center sm:items-end gap-4 shrink-0">
+							<div className="text-center sm:text-right">
+								<p className="text-5xl font-black text-zinc-100">$9<span className="text-2xl text-zinc-400">/mo</span></p>
+								<p className="text-zinc-500 text-sm mt-1">or $79/year — save 27%</p>
+							</div>
+							<a
+								href="mailto:hello@fastvid.online?subject=Pro Plan&body=I want to subscribe to Fastvid Pro!"
+								className="inline-flex items-center gap-2 px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/30 transition-all hover:scale-[1.03] active:scale-[0.98]"
+							>
+								<Zap className="w-4 h-4 fill-current" />
+								Get Pro Access
+							</a>
+							<p className="text-xs text-zinc-600">We&apos;ll reply within 24 hours</p>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<div className="pb-8 text-[10px] text-zinc-700 font-mono uppercase tracking-widest">
+				fastvid.online • {new Date().getFullYear()}
 			</div>
 		</main>
 	);
