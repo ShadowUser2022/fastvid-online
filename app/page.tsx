@@ -160,7 +160,6 @@ export default function Home() {
 			>
 				<AnimatePresence mode="wait">
 					{!file ? (
-						// ... existing code ...
 						<motion.div
 							key="upload"
 							initial={{ opacity: 0, height: 0 }}
