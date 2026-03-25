@@ -49,10 +49,10 @@ export default function Home() {
 		setIsHovering(false);
 		if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
 			const droppedFile = e.dataTransfer.files[0];
-			if (droppedFile.type.startsWith("video/")) {
+			if (droppedFile.type.startsWith("video/") || droppedFile.type.startsWith("audio/") || droppedFile.name.endsWith(".wav") || droppedFile.name.endsWith(".aac")) {
 				setFile(droppedFile);
 			} else {
-				alert("Please upload a video file.");
+				alert("Please upload a video or audio file.");
 			}
 		}
 	};
@@ -123,10 +123,11 @@ export default function Home() {
 			addLog("Downloading result...");
 
 			const blob = await response.blob();
+			const ext = response.headers.get("X-File-Ext") || "mp4";
 			const url = window.URL.createObjectURL(blob);
 			const a = document.createElement("a");
 			a.href = url;
-			a.download = `fastvid-${speed}x.mp4`;
+			a.download = `fastvid-${speed}x.${ext}`;
 			document.body.appendChild(a);
 			a.click();
 			window.URL.revokeObjectURL(url);
@@ -181,7 +182,7 @@ export default function Home() {
 					transition={{ duration: 0.5, delay: 0.1 }}
 					className="text-4xl sm:text-6xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-zinc-100 to-zinc-500"
 				>
-					Speed up your videos. <br className="hidden sm:block" />
+					Speed up your media. <br className="hidden sm:block" />
 					<span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-blue-500">
 						Save your time.
 					</span>
@@ -193,7 +194,7 @@ export default function Home() {
 					transition={{ duration: 0.5, delay: 0.2 }}
 					className="text-lg text-zinc-400 max-w-xl"
 				>
-					Watch hour-long lectures in 40 minutes. Simply upload your video, pick your speed, and get the fast-forwarded result instantly.
+					Watch hour-long lectures in 40 minutes. Simply upload your video or audio, pick your speed, and get the fast-forwarded result instantly.
 				</motion.p>
 			</div>
 
@@ -223,7 +224,7 @@ export default function Home() {
 									type="file"
 									ref={fileInputRef}
 									onChange={handleFileChange}
-									accept="video/*"
+									accept="video/*,audio/*,.wav,.aac"
 									className="hidden"
 								/>
 								<div className="flex flex-col items-center gap-4 text-center pointer-events-none">
@@ -232,7 +233,7 @@ export default function Home() {
 									</div>
 									<div>
 										<h3 className="text-xl font-semibold text-zinc-200 mb-1">Click to upload or drag and drop</h3>
-										<p className="text-zinc-500 text-sm">MP4, WebM, or MOV up to 500MB</p>
+										<p className="text-zinc-500 text-sm">MP4, WebM, MOV, WAV, or AAC up to 500MB</p>
 									</div>
 								</div>
 							</div>
@@ -302,7 +303,7 @@ export default function Home() {
 									</>
 								) : (
 									<>
-										<span>Speed Up Video</span>
+										<span>Speed Up File</span>
 										<Play className="w-5 h-5 fill-current" />
 									</>
 								)}
@@ -344,9 +345,9 @@ export default function Home() {
 				<p className="text-center text-zinc-500 mb-12">Three simple steps. No account required.</p>
 				<div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
 					{[
-						{ step: "01", title: "Upload your video", desc: "Drag & drop any MP4, MOV, or WebM file up to 500MB directly on the page." },
+						{ step: "01", title: "Upload your file", desc: "Drag & drop any media file up to 500MB directly on the page." },
 						{ step: "02", title: "Choose your speed", desc: "Pick 1.25x, 1.5x, or 2x — or fine-tune with the slider. Audio pitch stays natural." },
-						{ step: "03", title: "Download instantly", desc: "Click Speed Up Video. Your browser downloads the ready file in seconds." },
+						{ step: "03", title: "Download instantly", desc: "Click Speed Up File. Your browser downloads the ready file in seconds." },
 					].map(({ step, title, desc }) => (
 						<div key={step} className="flex flex-col gap-3 p-6 rounded-2xl bg-zinc-900/60 border border-zinc-800">
 							<span className="text-5xl font-black text-indigo-500/30 leading-none">{step}</span>
