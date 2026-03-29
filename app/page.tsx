@@ -49,7 +49,7 @@ export default function Home() {
 	const handleDrop = (e: React.DragEvent) => {
 		e.preventDefault();
 		setIsHovering(false);
-		if (e.dataTransfer.files?.length > 0) {
+		if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
 			const f = e.dataTransfer.files[0];
 			if (f.type.startsWith("video/") || f.type.startsWith("audio/") || f.name.endsWith(".wav") || f.name.endsWith(".aac")) {
 				setFile(f);
@@ -60,7 +60,7 @@ export default function Home() {
 	};
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		if (e.target.files?.length > 0) {
+		if (e.target.files && e.target.files.length > 0) {
 			const selectedFile = e.target.files[0];
 			setFile(selectedFile);
 			gaEvent("file_selected", { file_name: selectedFile.name, file_size: selectedFile.size });
