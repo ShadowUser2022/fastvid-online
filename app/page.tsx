@@ -153,7 +153,7 @@ export default function Home() {
 	};
 
 	return (
-		<main className="flex min-h-screen flex-col items-center justify-center p-6 sm:p-24 relative overflow-hidden">
+		<main className="flex min-h-screen flex-col items-center justify-center px-4 pt-10 pb-10 sm:p-24 relative overflow-hidden">
 			{/* Limit Reached Modal */}
 			<LimitModal
 				isOpen={showLimitModal}
@@ -165,12 +165,12 @@ export default function Home() {
 			<div className="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-indigo-600/20 blur-[120px] pointer-events-none" />
 			<div className="absolute bottom-[-10%] right-[-10%] w-[40vw] h-[40vw] rounded-full bg-blue-600/20 blur-[120px] pointer-events-none" />
 
-			<div className="z-10 w-full max-w-2xl flex flex-col items-center text-center gap-6 mb-12">
+			<div className="z-10 w-full max-w-2xl flex flex-col items-center text-center gap-4 sm:gap-6 mb-8 sm:mb-12">
 				<motion.div
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.5 }}
-					className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-sm font-medium text-zinc-300 mb-4"
+					className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-sm font-medium text-zinc-300 mb-2 sm:mb-4"
 				>
 					<Zap className="w-4 h-4 text-indigo-400 fill-indigo-400" />
 					<span>No Chipmunk Voice Effect</span>
@@ -180,7 +180,7 @@ export default function Home() {
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.5, delay: 0.1 }}
-					className="text-4xl sm:text-6xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-zinc-100 to-zinc-500"
+					className="text-3xl sm:text-6xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-zinc-100 to-zinc-500"
 				>
 					Speed up your media. <br className="hidden sm:block" />
 					<span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-blue-500">
@@ -192,7 +192,7 @@ export default function Home() {
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.5, delay: 0.2 }}
-					className="text-lg text-zinc-400 max-w-xl"
+					className="text-base sm:text-lg text-zinc-400 max-w-xl"
 				>
 					Watch hour-long lectures in 40 minutes. Simply upload your video or audio, pick your speed, and get the fast-forwarded result instantly.
 				</motion.p>
@@ -202,7 +202,7 @@ export default function Home() {
 				initial={{ opacity: 0, scale: 0.95 }}
 				animate={{ opacity: 1, scale: 1 }}
 				transition={{ duration: 0.5, delay: 0.3 }}
-				className="z-10 w-full max-w-2xl bg-zinc-900/50 backdrop-blur-xl border border-zinc-800 rounded-3xl p-6 sm:p-10 shadow-2xl shadow-indigo-500/10"
+				className="z-10 w-full max-w-2xl bg-zinc-900/50 backdrop-blur-xl border border-zinc-800 rounded-2xl sm:rounded-3xl p-5 sm:p-10 shadow-2xl shadow-indigo-500/10"
 			>
 				<AnimatePresence mode="wait">
 					{!file ? (
@@ -214,7 +214,7 @@ export default function Home() {
 							className="flex flex-col gap-6"
 						>
 							<div
-								className={`relative flex flex-col items-center justify-center p-12 border-2 border-dashed rounded-2xl transition-all duration-200 cursor-pointer overflow-hidden ${isHovering ? "border-indigo-500 bg-indigo-500/10" : "border-zinc-700 hover:border-zinc-500 hover:bg-zinc-800/50"}`}
+								className={`relative flex flex-col items-center justify-center p-8 sm:p-12 border-2 border-dashed rounded-2xl transition-all duration-200 cursor-pointer overflow-hidden active:bg-indigo-500/10 active:border-indigo-500 ${isHovering ? "border-indigo-500 bg-indigo-500/10" : "border-zinc-700 hover:border-zinc-500 hover:bg-zinc-800/50"}`}
 								onDragOver={handleDragOver}
 								onDragLeave={handleDragLeave}
 								onDrop={handleDrop}
@@ -232,7 +232,10 @@ export default function Home() {
 										<UploadCloud className="w-8 h-8" />
 									</div>
 									<div>
-										<h3 className="text-xl font-semibold text-zinc-200 mb-1">Click to upload or drag and drop</h3>
+										<h3 className="text-lg sm:text-xl font-semibold text-zinc-200 mb-1">
+											<span className="sm:hidden">Tap to upload</span>
+											<span className="hidden sm:inline">Click to upload or drag and drop</span>
+										</h3>
 										<p className="text-zinc-500 text-sm">MP4, WebM, MOV, WAV, or AAC up to 500MB</p>
 									</div>
 								</div>
@@ -246,19 +249,19 @@ export default function Home() {
 							exit={{ opacity: 0, height: 0 }}
 							className="flex flex-col gap-8"
 						>
-							<div className="flex items-center justify-between bg-zinc-800/50 p-4 rounded-xl border border-zinc-700/50">
-								<div className="flex items-center gap-4 truncate">
-									<div className="p-3 bg-indigo-500/20 text-indigo-400 rounded-lg shrink-0">
-										<FileVideo className="w-6 h-6" />
+							<div className="flex items-center justify-between bg-zinc-800/50 p-3 sm:p-4 rounded-xl border border-zinc-700/50">
+								<div className="flex items-center gap-3 sm:gap-4 min-w-0 flex-1">
+									<div className="p-2 sm:p-3 bg-indigo-500/20 text-indigo-400 rounded-lg shrink-0">
+										<FileVideo className="w-5 h-5 sm:w-6 sm:h-6" />
 									</div>
-									<div className="truncate">
-										<p className="font-medium text-zinc-200 truncate">{file.name}</p>
-										<p className="text-sm text-zinc-500">{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
+									<div className="min-w-0 flex-1">
+										<p className="font-medium text-zinc-200 truncate text-sm sm:text-base">{file.name}</p>
+										<p className="text-xs sm:text-sm text-zinc-500">{(file.size / (1024 * 1024)).toFixed(2)} MB</p>
 									</div>
 								</div>
 								<button
 									onClick={() => setFile(null)}
-									className="p-2 text-zinc-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors shrink-0"
+									className="min-w-[44px] min-h-[44px] flex items-center justify-center text-zinc-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors shrink-0"
 									disabled={isProcessing}
 									title="Remove file"
 								>
@@ -268,11 +271,17 @@ export default function Home() {
 
 							<div className="flex flex-col gap-4">
 								<div className="flex items-center justify-between">
-									<label className="text-sm font-medium text-zinc-300">Target Speed: <span className="text-indigo-400 text-lg font-bold ml-1">{speed}x</span></label>
-									<div className="flex gap-2 text-xs font-medium text-zinc-500">
-										<button onClick={() => setSpeed(1.25)} className="hover:text-zinc-300 transition-colors">1.25x</button>
-										<button onClick={() => setSpeed(1.5)} className="hover:text-zinc-300 transition-colors">1.5x</button>
-										<button onClick={() => setSpeed(2.0)} className="hover:text-zinc-300 transition-colors">2.0x</button>
+									<label className="text-sm font-medium text-zinc-300">Speed: <span className="text-indigo-400 text-lg font-bold ml-1">{speed}x</span></label>
+									<div className="flex gap-2">
+										{[1.25, 1.5, 2.0].map((s) => (
+											<button
+												key={s}
+												onClick={() => setSpeed(s)}
+												className={`min-h-[36px] px-3 py-1 rounded-lg text-xs font-semibold transition-colors ${speed === s ? "bg-indigo-600 text-white" : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-200"}`}
+											>
+												{s}x
+											</button>
+										))}
 									</div>
 								</div>
 
@@ -283,7 +292,7 @@ export default function Home() {
 									step="0.05"
 									value={speed}
 									onChange={(e) => setSpeed(parseFloat(e.target.value))}
-									className="w-full h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+									className="w-full h-3 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
 									disabled={isProcessing}
 								/>
 							</div>
@@ -340,9 +349,9 @@ export default function Home() {
 			</div>
 
 			{/* HOW IT WORKS */}
-			<section className="z-10 w-full max-w-4xl mt-12 mb-12">
-				<h2 className="text-3xl font-bold text-center text-zinc-100 mb-3">How it works</h2>
-				<p className="text-center text-zinc-500 mb-12">Three simple steps. No account required.</p>
+			<section className="z-10 w-full max-w-4xl mt-8 sm:mt-12 mb-8 sm:mb-12">
+				<h2 className="text-2xl sm:text-3xl font-bold text-center text-zinc-100 mb-3">How it works</h2>
+				<p className="text-center text-zinc-500 mb-8 sm:mb-12 text-sm sm:text-base">Three simple steps. No account required.</p>
 				<div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
 					{[
 						{ step: "01", title: "Upload your file", desc: "Drag & drop any media file up to 500MB directly on the page." },
@@ -359,7 +368,7 @@ export default function Home() {
 			</section>
 
 			{/* WHY CHOOSE US & FAQ SECTION */}
-			<section className="z-10 w-full max-w-4xl mt-20 mb-20 px-4">
+			<section className="z-10 w-full max-w-4xl mt-10 sm:mt-20 mb-10 sm:mb-20">
 				<div className="grid grid-cols-1 md:grid-cols-2 gap-12">
 					{/* Why FastVid */}
 					<div>
@@ -405,9 +414,9 @@ export default function Home() {
 			</section>
 
 			{/* CONTACT SECTION */}
-			<section className="z-10 w-full max-w-4xl mb-20">
-				<div className="text-center mb-12">
-					<h2 className="text-3xl font-bold text-zinc-100 mb-3">Get in Touch</h2>
+			<section className="z-10 w-full max-w-4xl mb-10 sm:mb-20">
+				<div className="text-center mb-8 sm:mb-12">
+					<h2 className="text-2xl sm:text-3xl font-bold text-zinc-100 mb-3">Get in Touch</h2>
 					<p className="text-center text-zinc-500">We're here to help and listen to your ideas</p>
 				</div>
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -456,15 +465,15 @@ export default function Home() {
 			</section>
 
 			{/* PRO PLAN */}
-			<section className="z-10 w-full max-w-4xl mb-24">
-				<div className="relative overflow-hidden rounded-3xl border border-indigo-500/30 bg-gradient-to-br from-indigo-900/40 to-zinc-900/60 p-8 sm:p-12">
+			<section className="z-10 w-full max-w-4xl mb-14 sm:mb-24">
+				<div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-indigo-500/30 bg-gradient-to-br from-indigo-900/40 to-zinc-900/60 p-6 sm:p-12">
 					<div className="absolute top-0 right-0 w-64 h-64 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
-					<div className="flex flex-col sm:flex-row gap-8 items-start sm:items-center justify-between relative z-10">
-						<div className="flex flex-col gap-4">
+					<div className="flex flex-col gap-6 sm:gap-8 sm:flex-row sm:items-center justify-between relative z-10">
+						<div className="flex flex-col gap-3 sm:gap-4">
 							<div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-500/30 text-indigo-300 text-sm font-medium w-fit">
 								<Zap className="w-3.5 h-3.5 fill-current" /> Pro Plan
 							</div>
-							<h2 className="text-3xl font-extrabold text-zinc-100">Unlock full power</h2>
+							<h2 className="text-2xl sm:text-3xl font-extrabold text-zinc-100">Unlock full power</h2>
 							<ul className="flex flex-col gap-2 text-sm text-zinc-400">
 								{[
 									"Videos up to 3 hours long",
@@ -479,14 +488,14 @@ export default function Home() {
 								))}
 							</ul>
 						</div>
-						<div className="flex flex-col items-center sm:items-end gap-4 shrink-0">
-							<div className="text-center sm:text-right">
-								<p className="text-5xl font-black text-zinc-100">$9<span className="text-2xl text-zinc-400">/mo</span></p>
+						<div className="flex flex-col items-start sm:items-end gap-4 shrink-0">
+							<div className="text-left sm:text-right">
+								<p className="text-4xl sm:text-5xl font-black text-zinc-100">$9<span className="text-xl sm:text-2xl text-zinc-400">/mo</span></p>
 								<p className="text-zinc-500 text-sm mt-1">or $79/year — save 27%</p>
 							</div>
 							<a
 								href="mailto:myappsense@gmail.com?subject=FastVid Pro Plan&body=Hi, I want to subscribe to FastVid Pro!"
-								className="inline-flex items-center gap-2 px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/30 transition-all hover:scale-[1.03] active:scale-[0.98]"
+								className="inline-flex items-center gap-2 px-6 sm:px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/30 transition-all hover:scale-[1.03] active:scale-[0.98] w-full sm:w-auto justify-center"
 							>
 								<Zap className="w-4 h-4 fill-current" />
 								Get Pro Access
@@ -498,19 +507,24 @@ export default function Home() {
 			</section>
 
 			<div className="pb-8 text-center">
+				<div className="flex items-center justify-center gap-2 mb-3">
+					<span className="text-lg">🇺🇦</span>
+					<span className="text-xs text-zinc-500 font-medium">Made in Ukraine</span>
+					<span className="text-lg">🇺🇦</span>
+				</div>
 				<div className="text-[10px] text-zinc-700 font-mono uppercase tracking-widest mb-2">
 					fastvid.online • {new Date().getFullYear()}
 				</div>
-				<div className="flex items-center justify-center gap-3 text-xs text-zinc-600">
-					<a href="mailto:myappsense@gmail.com" className="hover:text-zinc-400 transition-colors">
+				<div className="flex items-center justify-center gap-1 text-xs text-zinc-600">
+					<a href="mailto:myappsense@gmail.com" className="px-3 py-2 hover:text-zinc-400 transition-colors">
 						Support
 					</a>
 					<span>•</span>
-					<a href="mailto:myappsense@gmail.com" className="hover:text-zinc-400 transition-colors">
+					<a href="mailto:myappsense@gmail.com" className="px-3 py-2 hover:text-zinc-400 transition-colors">
 						Contact
 					</a>
 					<span>•</span>
-					<a href="https://t.me/Tolik_Motion" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-400 transition-colors">
+					<a href="https://t.me/Tolik_Motion" target="_blank" rel="noopener noreferrer" className="px-3 py-2 hover:text-zinc-400 transition-colors">
 						Telegram
 					</a>
 				</div>
