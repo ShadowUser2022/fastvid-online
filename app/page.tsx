@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { UploadCloud, FileVideo, Zap, Play, X, Loader2 } from "lucide-react";
+import { UploadCloud, FileVideo, Zap, Play, X, Loader2, MessageCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import LimitModal from "@/components/LimitModal";
 import { gaEvent } from "@/lib/ga";
@@ -404,6 +404,57 @@ export default function Home() {
 				</div>
 			</section>
 
+			{/* CONTACT SECTION */}
+			<section className="z-10 w-full max-w-4xl mb-20">
+				<div className="text-center mb-12">
+					<h2 className="text-3xl font-bold text-zinc-100 mb-3">Get in Touch</h2>
+					<p className="text-center text-zinc-500">We're here to help and listen to your ideas</p>
+				</div>
+				<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+					<div className="flex flex-col gap-4 p-6 rounded-2xl bg-zinc-900/60 border border-zinc-800 hover:border-indigo-500/50 transition-colors">
+						<div className="p-3 bg-indigo-500/20 text-indigo-400 rounded-lg w-fit">
+							<UploadCloud className="w-6 h-6" />
+						</div>
+						<h3 className="text-lg font-semibold text-zinc-100">Support</h3>
+						<p className="text-sm text-zinc-500 leading-relaxed">Need help with FastVid? Having technical issues or questions about using our service?</p>
+						<a
+							href="mailto:myappsense@gmail.com?subject=FastVid Support Request&body=Hi, I need help with FastVid:"
+							className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-medium rounded-lg transition-colors mt-2"
+						>
+							myappsense@gmail.com
+						</a>
+					</div>
+					<div className="flex flex-col gap-4 p-6 rounded-2xl bg-zinc-900/60 border border-zinc-800 hover:border-indigo-500/50 transition-colors">
+						<div className="p-3 bg-indigo-500/20 text-indigo-400 rounded-lg w-fit">
+							<Zap className="w-6 h-6" />
+						</div>
+						<h3 className="text-lg font-semibold text-zinc-100">Proposals & Partnerships</h3>
+						<p className="text-sm text-zinc-500 leading-relaxed">Have ideas for collaboration, feature suggestions, or business proposals? We'd love to hear from you!</p>
+						<a
+							href="mailto:myappsense@gmail.com?subject=FastVid Proposal&body=Hi, I'd like to discuss:"
+							className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-medium rounded-lg transition-colors mt-2"
+						>
+							myappsense@gmail.com
+						</a>
+					</div>
+					<div className="flex flex-col gap-4 p-6 rounded-2xl bg-zinc-900/60 border border-zinc-800 hover:border-indigo-500/50 transition-colors">
+						<div className="p-3 bg-indigo-500/20 text-indigo-400 rounded-lg w-fit">
+							<MessageCircle className="w-6 h-6" />
+						</div>
+						<h3 className="text-lg font-semibold text-zinc-100">Quick Chat</h3>
+						<p className="text-sm text-zinc-500 leading-relaxed">Prefer instant messaging? Reach out on Telegram for quick questions and support.</p>
+						<a
+							href="https://t.me/Tolik_Motion"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-medium rounded-lg transition-colors mt-2"
+						>
+							@Tolik_Motion
+						</a>
+					</div>
+				</div>
+			</section>
+
 			{/* PRO PLAN */}
 			<section className="z-10 w-full max-w-4xl mb-24">
 				<div className="relative overflow-hidden rounded-3xl border border-indigo-500/30 bg-gradient-to-br from-indigo-900/40 to-zinc-900/60 p-8 sm:p-12">
@@ -434,7 +485,7 @@ export default function Home() {
 								<p className="text-zinc-500 text-sm mt-1">or $79/year — save 27%</p>
 							</div>
 							<a
-								href="mailto:hello@fastvid.online?subject=Pro Plan&body=I want to subscribe to Fastvid Pro!"
+								href="mailto:myappsense@gmail.com?subject=FastVid Pro Plan&body=Hi, I want to subscribe to FastVid Pro!"
 								className="inline-flex items-center gap-2 px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/30 transition-all hover:scale-[1.03] active:scale-[0.98]"
 							>
 								<Zap className="w-4 h-4 fill-current" />
@@ -446,8 +497,23 @@ export default function Home() {
 				</div>
 			</section>
 
-			<div className="pb-8 text-[10px] text-zinc-700 font-mono uppercase tracking-widest">
-				fastvid.online • {new Date().getFullYear()}
+			<div className="pb-8 text-center">
+				<div className="text-[10px] text-zinc-700 font-mono uppercase tracking-widest mb-2">
+					fastvid.online • {new Date().getFullYear()}
+				</div>
+				<div className="flex items-center justify-center gap-3 text-xs text-zinc-600">
+					<a href="mailto:myappsense@gmail.com" className="hover:text-zinc-400 transition-colors">
+						Support
+					</a>
+					<span>•</span>
+					<a href="mailto:myappsense@gmail.com" className="hover:text-zinc-400 transition-colors">
+						Contact
+					</a>
+					<span>•</span>
+					<a href="https://t.me/Tolik_Motion" target="_blank" rel="noopener noreferrer" className="hover:text-zinc-400 transition-colors">
+						Telegram
+					</a>
+				</div>
 			</div>
 		</main>
 	);
