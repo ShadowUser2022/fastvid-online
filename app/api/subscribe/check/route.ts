@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isProUser } from "@/lib/supabase";
 
+export const dynamic = "force-dynamic";
+
 // Check if an email has active Pro subscription
 export async function POST(req: NextRequest) {
   try {

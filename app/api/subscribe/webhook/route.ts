@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 
+export const dynamic = "force-dynamic";
+
 // Monobank sends POST here when payment status changes
 export async function POST(req: NextRequest) {
   try {
