@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { supabase } from "@/lib/supabase";
 
 // Monobank sends POST here when payment status changes
 export async function POST(req: NextRequest) {
@@ -6,7 +7,7 @@ export async function POST(req: NextRequest) {
     const data = await req.json();
     console.log("Monobank webhook:", JSON.stringify(data, null, 2));
 
-    const { invoiceId, status, amount, ccy, reference, walletData } = data;
+    const { invoiceId, status, reference, walletData } = data;
 
     // Only act on successful payments
     if (status !== "success") {
@@ -14,20 +15,57 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true });
     }
 
-    // Extract email from reference: "fastvid_pro_{timestamp}_{email}"
-    const emailRaw = reference?.split("_").slice(3).join("_").replace(/_/g, ".") ?? "";
-    // walletData?.cardToken is saved card token for future recurring charges
+    // Extract email from reference: "fastvid_pro_{timestamp}_{email_with_underscores}"
+    // e.g. "fastvid_pro_1711234567_user_example_com" → "user@example.com"
+    const parts = reference?.split("_") ?? [];
+    // parts[0]=fastvid, parts[1]=pro, parts[2]=timestamp, parts[3..]=email parts
+    const emailParts = parts.slice(3);
+    // Last part before @ was replaced with _ at position -2...
+    // Reconstruct: join with _ then replace last _ with @
+    const emailJoined = emailParts.join("_");
+    // Find the domain part (contains a dot) — split by _ and rejoin
+    // Simpler: the original email had @ replaced with _ — find segment with dot
+    const emailSegments = emailJoined.split("_");
+    let email = "";
+    for (let i = 0; i < emailSegments.length; i++) {
+      if (emailSegments[i].includes(".") && i > 0) {
+        email = emailSegments.slice(0, i).join(".") + "@" + emailSegments[i];
+        break;
+      }
+    }
+    // Fallback: use walletData email if available
+    const finalEmail = (email || walletData?.email || "").toLowerCase();
     const cardToken = walletData?.cardToken ?? null;
 
-    console.log(`✅ Payment success! Invoice: ${invoiceId}, Amount: ${amount/100} USD`);
-    console.log(`   Reference: ${reference}`);
-    console.log(`   Card token for recurring: ${cardToken}`);
+    console.log(`✅ Payment success! Invoice: ${invoiceId}, Email: ${finalEmail}`);
 
-    // TODO (Task 9): Save to Supabase — { email, cardToken, invoiceId, status: 'active' }
+    if (!finalEmail) {
+      console.error("Could not extract email from reference:", reference);
+      return NextResponse.json({ ok: true });
+    }
 
-    // For now: notify owner via email log
-    // In production this will write to DB and auto-activate Pro
-    console.log(`🔔 NEW PRO SUBSCRIBER — add to PRO_EMAILS env: ${emailRaw}`);
+    // Save/update subscriber in Supabase
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 30); // 30 days from now
+
+    const { error } = await supabase
+      .from("subscribers")
+      .upsert(
+        {
+          email: finalEmail,
+          card_token: cardToken,
+          invoice_id: invoiceId,
+          status: "active",
+          expires_at: expiresAt.toISOString(),
+        },
+        { onConflict: "email" } // update if email already exists
+      );
+
+    if (error) {
+      console.error("Supabase upsert error:", error);
+    } else {
+      console.log(`🎉 Pro activated for ${finalEmail} until ${expiresAt.toISOString()}`);
+    }
 
     return NextResponse.json({ ok: true });
 
