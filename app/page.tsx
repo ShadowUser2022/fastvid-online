@@ -12,6 +12,39 @@ export default function Home() {
 	const [lang, setLang] = useState<Lang>("en");
 	const t = translations[lang];
 
+	// Pro payment modal
+	const [showProModal, setShowProModal] = useState(false);
+	const [proEmail, setProEmail] = useState("");
+	const [proLoading, setProLoading] = useState(false);
+	const [proError, setProError] = useState("");
+
+	const handleProCheckout = async () => {
+		if (!proEmail || !proEmail.includes("@")) {
+			setProError("Please enter a valid email");
+			return;
+		}
+		setProLoading(true);
+		setProError("");
+		try {
+			gaEvent("pro_checkout_start", { lang });
+			const res = await fetch("/api/subscribe/create", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ email: proEmail }),
+			});
+			const data = await res.json();
+			if (data.pageUrl) {
+				window.location.href = data.pageUrl;
+			} else {
+				setProError(data.error || "Something went wrong. Try again.");
+			}
+		} catch {
+			setProError("Network error. Please try again.");
+		} finally {
+			setProLoading(false);
+		}
+	};
+
 	const [file, setFile] = useState<File | null>(null);
 	const [isHovering, setIsHovering] = useState(false);
 	const [speed, setSpeed] = useState(1.5);
@@ -126,6 +159,53 @@ export default function Home() {
 	return (
 		<main className="flex min-h-screen flex-col items-center justify-center px-4 pt-10 pb-10 sm:p-24 relative overflow-hidden">
 			<LimitModal isOpen={showLimitModal} onClose={() => setShowLimitModal(false)} onAdWatched={() => setAdUnlocked(true)} />
+
+			{/* Pro Payment Modal */}
+			<AnimatePresence>
+				{showProModal && (
+					<motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+						className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+						<motion.div initial={{ scale: 0.9, y: 20, opacity: 0 }} animate={{ scale: 1, y: 0, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
+							className="relative w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-3xl p-8 shadow-2xl shadow-indigo-500/10">
+							<button onClick={() => { setShowProModal(false); setProError(""); }}
+								className="absolute top-4 right-4 p-2 text-zinc-500 hover:text-zinc-300 transition-colors">
+								<X className="w-5 h-5" />
+							</button>
+							<div className="flex flex-col gap-5">
+								<div className="text-center">
+									<div className="text-4xl mb-3">⚡</div>
+									<h2 className="text-2xl font-extrabold text-zinc-100 mb-1">{t.pro_title}</h2>
+									<p className="text-zinc-400 text-sm">$9/month · Cancel anytime</p>
+								</div>
+								<ul className="flex flex-col gap-2 text-sm text-zinc-400 bg-zinc-800/50 rounded-xl p-4">
+									{[t.pro_f1, t.pro_f2, t.pro_f3, t.pro_f4].map(f => (
+										<li key={f} className="flex items-center gap-2">
+											<span className="text-indigo-400">✓</span>{f}
+										</li>
+									))}
+								</ul>
+								<div className="flex flex-col gap-2">
+									<label className="text-sm text-zinc-400">Your email (for receipt)</label>
+									<input
+										type="email"
+										value={proEmail}
+										onChange={e => { setProEmail(e.target.value); setProError(""); }}
+										onKeyDown={e => e.key === "Enter" && handleProCheckout()}
+										placeholder="you@example.com"
+										className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 focus:border-indigo-500 rounded-xl text-zinc-100 outline-none transition-colors text-sm"
+									/>
+									{proError && <p className="text-red-400 text-xs">{proError}</p>}
+								</div>
+								<button onClick={handleProCheckout} disabled={proLoading}
+									className="flex items-center justify-center gap-2 w-full py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed">
+									{proLoading ? <><Loader2 className="w-4 h-4 animate-spin" /> Redirecting...</> : <><Zap className="w-4 h-4 fill-current" /> Pay $9 · Monobank</>}
+								</button>
+								<p className="text-xs text-zinc-600 text-center">Secure payment via Monobank 🇺🇦</p>
+							</div>
+						</motion.div>
+					</motion.div>
+				)}
+			</AnimatePresence>
 
 			{/* Background blobs */}
 			<div className="absolute top-[-10%] left-[-10%] w-[40vw] h-[40vw] rounded-full bg-indigo-600/20 blur-[120px] pointer-events-none" />
@@ -365,10 +445,11 @@ export default function Home() {
 								<p className="text-4xl sm:text-5xl font-black text-zinc-100">$9<span className="text-xl sm:text-2xl text-zinc-400">/mo</span></p>
 								<p className="text-zinc-500 text-sm mt-1">{t.pro_yearly}</p>
 							</div>
-							<a href="mailto:myappsense@gmail.com?subject=FastVid Pro Plan&body=Hi, I want to subscribe to FastVid Pro!"
+							<button
+								onClick={() => { setShowProModal(true); gaEvent("pro_click", { location: "pro_section" }); }}
 								className="inline-flex items-center gap-2 px-6 sm:px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl shadow-lg shadow-indigo-600/30 transition-all hover:scale-[1.03] active:scale-[0.98] w-full sm:w-auto justify-center">
 								<Zap className="w-4 h-4 fill-current" />{t.pro_btn}
-							</a>
+							</button>
 							<p className="text-xs text-zinc-600">{t.pro_reply}</p>
 						</div>
 					</div>
